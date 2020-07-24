@@ -3,21 +3,22 @@ class Password():
         decimal = {'0','1','2','3','4','5','6','7','8','9'},
         upperLetters = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'},
         lowerLetters = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},
+        accentMostUsed = {'à', 'â', 'ç', 'è', 'é', 'ê', 'ë', 'î', 'ï', 'ô', 'ù', 'û', 'ü'},
         accentedLetters = {'À','Á','Â','Ã','Ä','Å','Æ','Ç','È','É','Ê','Ë','Ì','Í','Î','Ï','Ð','Ñ','Ò','Ó','Ô','Õ','Ö','Ù','Ú','Û','Ü','Ý','Þ','ß','à','á','â','ã','ä','å','æ','ç','è','é','ê','ë','ì','í','î','ï','ð','ñ','ò','ó','ô','õ','ö','ù','ú','û','ü','ý','ÿ'},
         symbolMostUsed = {'!','@','#','$','%','^','&','*'},
         symbol128 = {'~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}',';',':',',','.','<','>','/','?','|',' ','\'','"','\\','`'},
-        symbol256 = {'~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}',';',':',',','.','<','>','/','?','|',' ','\'','"','\\','`','¡','¢','£','¤','¥','¦','§','¨','©','ª','«','¬','®','¯','°','±','²','³','´','µ','¶','·','¸','¹','º','»','¼','½','¾','¿','×','Ø','÷','ø','þ'}):
+        symbol256 = {'~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}',';',':',',','.','<','>','/','?','|',' ','\'','"','\\','`','¡','¢','£','¤','¥','¦','§','¨','©','ª','«','¬','®','¯','°','±','²','³','´','µ','¶','·','¸','¹','º','»','¼','½','¾','¿','×','Ø','÷','ø'}):
 
         self.value = value # plain password
         self.lenght = len(value) # password lenght
 
-        self.unionCharClass = self.calcUnionCharClass(decimal=decimal,upperLetters=upperLetters,lowerLetters=lowerLetters,accentedLetters=accentedLetters,symbolMostUsed=symbolMostUsed,symbol128=symbol128,symbol256=symbol256)
+        self.unionCharClass = self.calcUnionCharClass(decimal=decimal,upperLetters=upperLetters,lowerLetters=lowerLetters,accentMostUsed=accentMostUsed,accentedLetters=accentedLetters,symbolMostUsed=symbolMostUsed,symbol128=symbol128,symbol256=symbol256)
         self.nbOfPossibleChar = len(self.unionCharClass)
 
         self.complexity = self.nbOfPossibleChar**self.lenght # password complexity = c^n with c the number of potential symbol contained in the password and n the password lenght
         self.strenght = self.calcStrenght() # password strenght in bits such that complexity is less than 2^n with n the strenght in bits
 
-    def calcUnionCharClass(self, decimal, upperLetters, lowerLetters, accentedLetters, symbolMostUsed, symbol128, symbol256):
+    def calcUnionCharClass(self, decimal, upperLetters, lowerLetters, accentMostUsed, accentedLetters, symbolMostUsed, symbol128, symbol256):
         """ Calculate the password complexity depending of its lenght and its characters """
         unionCharClass = set() # Use set instead list to make mathematical operations like union, intersection or somethings else
         for char in self.value:
@@ -27,6 +28,8 @@ class Password():
                 unionCharClass = unionCharClass.union(upperLetters)
             elif char in lowerLetters:
                 unionCharClass = unionCharClass.union(lowerLetters)
+            elif char in accentMostUsed:
+                unionCharClass = unionCharClass.union(accentMostUsed)
             elif char in accentedLetters:
                 unionCharClass = unionCharClass.union(accentedLetters)
             elif char in symbolMostUsed:
